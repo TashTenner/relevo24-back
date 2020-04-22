@@ -10,10 +10,10 @@ const MongoStore = require('connect-mongo')(session);
 const cors = require('cors')({ origin: true, credentials: true }); // deploy Netlify
 require('dotenv').config();
 
-const authRouter = require('./routes/auth');
+// const authRouter = require('./routes/auth');
 // const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const adminRouter = require('./routes/admin');
+// const adminRouter = require('./routes/admin');
 
 mongoose.set('useCreateIndex', true);
 mongoose
@@ -61,23 +61,23 @@ app.set('trust proxy', true);
 app.use(cors); // Netlify
 app.options('*', cors); // Netlify
 
-// to be used if not deployed with Netlify
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: [process.env.FRONTEND_URL],
-//   }),
-// );
+// // to be used if not deployed with Netlify
+// // app.use(
+// //   cors({
+// //     credentials: true,
+// //     origin: [process.env.FRONTEND_URL],
+// //   }),
+// // );
 
 app.use((req, res, next) => {
   app.locals.currentUser = req.session.currentUser;
   next();
 });
 
-app.use('/', authRouter);
+// app.use('/', authRouter);
 // app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/admins', adminRouter);
+// app.use('/api/admins', adminRouter);
 
 // catch 404 and forward to error handler
 // eslint-disable-next-line no-unused-vars

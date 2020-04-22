@@ -7,7 +7,7 @@ const userSchema = new Schema(
   {
     // email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
-    hashedPassword: { type: String, required: true },
+    // hashedPassword: { type: String, required: true },
     name: { type: String },
     familyName: { type: String },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
@@ -28,9 +28,9 @@ const userSchema = new Schema(
   },
 );
 
-userSchema.virtual('fullName').get(() => {
-  return this.name + ' ' + this.familyName;
-});
+// userSchema.virtual('fullName').get(() => {
+//   return this.name + ' ' + this.familyName;
+// });
 
 const User = mongoose.model('User', userSchema);
 
