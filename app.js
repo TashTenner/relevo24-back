@@ -48,7 +48,7 @@ app.use(
     secret: process.env.SECRET,
     resave: true,
     saveUninitialized: true,
-    name: 'tangomaps', // cookie config
+    name: 'relevo24', // cookie config
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'none', // important for Netlify
