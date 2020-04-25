@@ -1,11 +1,13 @@
 const express = require('express');
 // const createError = require('http-errors');
 
+const { checkIfAdmin } = require('../middlewares');
+
 const router = express.Router();
 const WorkingDay = require('../models/WorkingDay');
 // const { checkIfLoggedIn, checkUsernameNotEmpty } = require("../middlewares");
 
-router.get('/', async (req, res, next) => {
+router.get('/', checkIfAdmin, async (req, res, next) => {
   try {
     const workingDays = await WorkingDay.find().populate('employeesTeam').populate('shifts');
     res.json(workingDays);
@@ -14,7 +16,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:workingDayId', async (req, res, next) => {
+router.get('/:workingDayId', checkIfAdmin, async (req, res, next) => {
   const { workingDayId } = req.params;
   try {
     const workingDay = await WorkingDay.findById(workingDayId).populate('employeesTeam').populate('shifts');
@@ -30,7 +32,7 @@ router.get('/:workingDayId', async (req, res, next) => {
 
 // only needed to add the 7 days of the week
 
-router.post('/add', async (req, res, next) => {
+router.post('/add', checkIfAdmin, async (req, res, next) => {
   const {
     dayName, dayNumber,
   } = req.body;
@@ -46,7 +48,7 @@ router.post('/add', async (req, res, next) => {
 
 // actually not needed
 
-router.put('/:workingDayId/update', async (req, res, next) => {
+router.put('/:workingDayId/update', checkIfAdmin, async (req, res, next) => {
   const { workingDayId } = req.params;
   const {
     dayName, dayNumber,
@@ -63,7 +65,7 @@ router.put('/:workingDayId/update', async (req, res, next) => {
 
 // actually not needed
 
-router.delete('/:workingDayId/delete', async (req, res, next) => {
+router.delete('/:workingDayId/delete', checkIfAdmin, async (req, res, next) => {
   const { workingDayId } = req.params;
   try {
     const workingDay = await WorkingDay.findByIdAndDelete(workingDayId);

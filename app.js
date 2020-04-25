@@ -10,13 +10,12 @@ const MongoStore = require('connect-mongo')(session);
 const cors = require('cors')({ origin: true, credentials: true }); // deploy Netlify
 require('dotenv').config();
 
-// const authRouter = require('./routes/auth');
+const authRouter = require('./routes/auth');
 // const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
 const employeesRouter = require('./routes/employee');
 const workingDaysRouter = require('./routes/workingDay');
 const shiftsRouter = require('./routes/shift');
-// const adminRouter = require('./routes/admin');
 
 mongoose.set('useCreateIndex', true);
 mongoose
@@ -77,13 +76,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use('/', authRouter);
+app.use('/', authRouter);
 // app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/employees', employeesRouter);
 app.use('/api/workingdays', workingDaysRouter);
 app.use('/api/shifts', shiftsRouter);
-// app.use('/api/admins', adminRouter);
 
 // catch 404 and forward to error handler
 // eslint-disable-next-line no-unused-vars

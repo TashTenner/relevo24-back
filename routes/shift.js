@@ -3,13 +3,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 // const createError = require('http-errors');
 
+const {
+  checkIfLoggedIn,
+  checkIfAdmin,
+} = require('../middlewares');
+
 const router = express.Router();
 const User = require('../models/User'); // populate
 const Shift = require('../models/Shift');
 const WorkingDay = require('../models/WorkingDay'); // populate
 // const { checkIfLoggedIn, checkUsernameNotEmpty } = require("../middlewares");
 
-router.get('/', async (req, res, next) => {
+router.get('/', checkIfLoggedIn, async (req, res, next) => {
   try {
     const shifts = await Shift.find().populate('day').populate('employee').populate('employeesTeam');
     res.json(shifts);
@@ -18,7 +23,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:shiftId', async (req, res, next) => {
+router.get('/:shiftId', checkIfLoggedIn, async (req, res, next) => {
   const { shiftId } = req.params;
   try {
     const shift = await Shift.findById(shiftId).populate('day').populate('employee');
@@ -32,7 +37,7 @@ router.get('/:shiftId', async (req, res, next) => {
   }
 });
 
-router.post('/add', async (req, res, next) => {
+router.post('/add', checkIfAdmin, async (req, res, next) => {
   try {
     const {
       timeStart, timeEnd, userId, workingDayId,
@@ -52,22 +57,7 @@ router.post('/add', async (req, res, next) => {
   }
 });
 
-// router.post('/tasks', async (req, res, next) => {
-//   try {
-//     const {
-//       title, description, projectID
-//     } = req.body;
-//     const task = await Task.create({
-//       title, description, project: projectID,
-//     });
-//     await Project.findByIdAndUpdate(projectID, { $push: { tasks: task._id } }, { new: true }).populate('tasks');
-//     res.json(task);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-router.put('/:shiftId/update', async (req, res, next) => {
+router.put('/:shiftId/update', checkIfAdmin, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.shiftId)) {
       res.status(400).json({ message: 'Specified id is not valid' });
@@ -86,7 +76,7 @@ router.put('/:shiftId/update', async (req, res, next) => {
   }
 });
 
-router.delete('/:shiftId/delete', async (req, res, next) => {
+router.delete('/:shiftId/delete', checkIfAdmin, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.shiftId)) {
       res.status(400).json({ message: 'Specified id is not valid' });
@@ -96,7 +86,10 @@ router.delete('/:shiftId/delete', async (req, res, next) => {
     const shift = await Shift.findByIdAndDelete(shiftId);
     await User.findByIdAndUpdate(shift.employee._id, { $pull: { shifts: shift._id } });
     await WorkingDay.findByIdAndUpdate(shift.day._id, { $pull: { shifts: shift._id } });
-    await WorkingDay.findByIdAndUpdate(shift.day._id, { $pull: { employeesTeam: shift.employee._id } });
+    await WorkingDay.findByIdAndUpdate(shift.day._id,
+      {
+        $pull: { employeesTeam: shift.employee._id },
+      });
     res.json(shift);
   } catch (error) {
     next(error);
