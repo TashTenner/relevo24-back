@@ -14,7 +14,8 @@ require('dotenv').config();
 // const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
 const employeesRouter = require('./routes/employee');
-const workingDayRouter = require('./routes/workingDay');
+const workingDaysRouter = require('./routes/workingDay');
+const shiftsRouter = require('./routes/shift');
 // const adminRouter = require('./routes/admin');
 
 mongoose.set('useCreateIndex', true);
@@ -80,7 +81,8 @@ app.use((req, res, next) => {
 // app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/employees', employeesRouter);
-app.use('/api/workingdays', workingDayRouter);
+app.use('/api/workingdays', workingDaysRouter);
+app.use('/api/shifts', shiftsRouter);
 // app.use('/api/admins', adminRouter);
 
 // catch 404 and forward to error handler

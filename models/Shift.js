@@ -5,8 +5,8 @@ const { ObjectId } = Schema.Types;
 
 const shiftSchema = new Schema(
   {
-    timeStart: String,
-    timeEnd: String,
+    timeStart: { type: String, required: true },
+    timeEnd: { type: String, required: true },
     day: { type: ObjectId, ref: 'WorkingDay' },
     employee: { type: ObjectId, ref: 'User' },
   },
