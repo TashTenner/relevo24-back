@@ -42,12 +42,11 @@ router.get('/:userId', checkIfLoggedIn, async (req, res, next) => {
 
 // router.post('/add', async (req, res, next) => {
 //   const {
-//     username, email,
+//     username,
 //   } = req.body;
 //   try {
 //     const user = await User.create({
 //       username,
-//       email,
 //     });
 //     res.json(user);
 //   } catch (error) {
@@ -57,7 +56,7 @@ router.get('/:userId', checkIfLoggedIn, async (req, res, next) => {
 
 // admin has access to all registered users and can change only their role (and by that add shifts)
 // OR maybe only change the role
-// the user himself can only change his: email, username, firstName, familyName
+// the user himself can only change his: username, firstName, familyName
 // this user after his role was changed, shows up in "employees"
 
 router.put('/:userId/update-role', checkIfAdmin, async (req, res, next) => {
@@ -83,10 +82,10 @@ router.put('/:userId/update', checkIfLoggedIn, async (req, res, next) => {
     }
     const { userId } = req.params;
     const {
-      email, username, firstName, familyName,
+      username, firstName, familyName,
     } = req.body;
     const user = await User.findByIdAndUpdate(userId, {
-      email, username, firstName, familyName,
+      username, firstName, familyName,
     }, { new: true });
     res.json(user);
   } catch (error) {

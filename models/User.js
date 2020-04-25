@@ -5,7 +5,7 @@ const { ObjectId } = Schema.Types;
 
 const userSchema = new Schema(
   {
-    email: { type: String, required: true, unique: true },
+    // email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     hashedPassword: { type: String, required: true },
     role: { type: String, enum: ['user', 'employee', 'admin'], default: 'user' },

@@ -63,10 +63,9 @@ router.put('/:employeeId/update', checkIfLoggedIn, async (req, res, next) => {
     }
     const { employeeId } = req.params;
     const {
-      email, username, firstName, familyName, shifts,
+      username, firstName, familyName, shifts,
     } = req.body;
     const employee = await User.findByIdAndUpdate(employeeId, {
-      email,
       username,
       firstName,
       familyName,
