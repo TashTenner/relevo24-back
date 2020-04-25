@@ -88,7 +88,7 @@ Click “Commit new file”
 ```bash
 $ git pull origin master
 $ git checkout -b dev
-$ npm install bcrypt connect-mongo express-session hbs http-errors mongoose cors dotenv connect-flash
+$ npm install bcrypt connect-mongo express-session hbs http-errors mongoose cors dotenv connect-flash multer
 $ git add .
 $ git commit -m "create dev branch and add npm packages"
 $ git push origin dev
