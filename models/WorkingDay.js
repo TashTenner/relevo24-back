@@ -5,8 +5,9 @@ const { ObjectId } = Schema.Types;
 
 const workingDaySchema = new Schema(
   {
-    employees: [{ type: ObjectId, ref: 'User' }],
-    day: { type: ObjectId, ref: 'WeekDay' },
+    dayName: { type: String, enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], unique: true },
+    employeesTeam: [{ type: ObjectId, ref: 'User' }],
+    shifts: [{ type: ObjectId, ref: 'Shift' }],
   },
   {
     timestamps: {

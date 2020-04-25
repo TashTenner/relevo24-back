@@ -5,20 +5,14 @@ const { ObjectId } = Schema.Types;
 
 const userSchema = new Schema(
   {
-    // email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     // hashedPassword: { type: String, required: true },
-    name: { type: String },
-    familyName: { type: String },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    shifts: [{
-      day: { type: ObjectId, ref: 'WeekDay' },
-      periods: [{
-        start: { type: Date },
-        end: { type: Date },
-      }],
-    }],
+    role: { type: String, enum: ['user', 'employee', 'admin'], default: 'user' },
     // avatar: { type: String, default: '', required: false },
+    firstName: { type: String },
+    familyName: { type: String },
+    shifts: [{ type: ObjectId, ref: 'Shift' }],
   },
   {
     timestamps: {
@@ -29,7 +23,7 @@ const userSchema = new Schema(
 );
 
 // userSchema.virtual('fullName').get(() => {
-//   return this.name + ' ' + this.familyName;
+//   return this.firstName + ' ' + this.familyName;
 // });
 
 const User = mongoose.model('User', userSchema);

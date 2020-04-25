@@ -3,11 +3,14 @@ const express = require('express');
 
 const router = express.Router();
 const User = require('../models/User');
+const Shift = require('../models/Shift'); // populate
+const WorkingDay = require('../models/WorkingDay');
+
 // const { checkIfLoggedIn, checkUsernameNotEmpty } = require("../middlewares");
 
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.find();
+    const users = await User.find({ role: 'user' });
     res.json(users);
   } catch (error) {
     next(error);
@@ -28,15 +31,16 @@ router.get('/:userId', async (req, res, next) => {
   }
 });
 
+// only to be used to add some dummy users
+
 router.post('/add', async (req, res, next) => {
   const {
-    username, name, familyName,
+    username, email,
   } = req.body;
   try {
     const user = await User.create({
       username,
-      name,
-      familyName,
+      email,
     });
     res.json(user);
   } catch (error) {
@@ -44,17 +48,19 @@ router.post('/add', async (req, res, next) => {
   }
 });
 
+// admin has access to all registered users and can change only their role and by that add shifts
+// the user himself can only change his: email, username, firstName, familyName
+// this user after his role was changed, shows up in "employees"
+
 router.put('/:userId/update', async (req, res, next) => {
   const { userId } = req.params;
   const {
-    username, name, familyName,
+    email, username, role, firstName, familyName, shifts,
   } = req.body;
   try {
-    const user = await User.findByIdAndUpdate(userId, { new: true }, {
-      username,
-      name,
-      familyName,
-    });
+    const user = await User.findByIdAndUpdate(userId, {
+      email, username, role, firstName, familyName, shifts,
+    }, { new: true }).populate('shifts');
     res.json(user);
   } catch (error) {
     next(error);
