@@ -59,7 +59,7 @@ router.get('/:userId', checkIfLoggedIn, async (req, res, next) => {
 // the user himself can only change his: username, firstName, familyName
 // this user after his role was changed, shows up in "employees"
 
-router.put('/:userId/update-role', checkIfAdmin, async (req, res, next) => {
+router.put('/:userId/update-role', /* checkIfAdmin */ checkIfLoggedIn, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       res.status(400).json({ message: 'Specified id is not valid' });
