@@ -41,7 +41,7 @@ router.get('/:employeeId', checkIfLoggedIn, async (req, res, next) => {
 
 router.put('/:employeeId/update-role', checkIfAdmin, async (req, res, next) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(req.params.employeeId)) {
       res.status(400).json({ message: 'Specified id is not valid' });
       return;
     }
@@ -57,7 +57,7 @@ router.put('/:employeeId/update-role', checkIfAdmin, async (req, res, next) => {
 
 router.put('/:employeeId/update', checkIfLoggedIn, async (req, res, next) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(req.params.employeeId)) {
       res.status(400).json({ message: 'Specified id is not valid' });
       return;
     }
@@ -81,7 +81,7 @@ router.put('/:employeeId/update', checkIfLoggedIn, async (req, res, next) => {
 
 router.delete('/:employeeId/delete', checkIfAdmin, async (req, res, next) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(req.params.employeeId)) {
       res.status(400).json({ message: 'Specified id is not valid' });
       return;
     }
