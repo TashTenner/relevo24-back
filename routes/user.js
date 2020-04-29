@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const {
   checkIfLoggedIn,
-  checkIfAdmin,
+  /* checkIfAdmin, */
 } = require('../middlewares');
 
 const router = express.Router();
@@ -59,7 +59,7 @@ router.get('/:userId', checkIfLoggedIn, async (req, res, next) => {
 // the user himself can only change his: username, firstName, familyName
 // this user after his role was changed, shows up in "employees"
 
-router.put('/:userId/update-role', checkIfAdmin, async (req, res, next) => {
+router.put('/:userId/update-role', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
@@ -93,7 +93,7 @@ router.put('/:userId/update', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-router.delete('/:userId/delete', checkIfAdmin, async (req, res, next) => {
+router.delete('/:userId/delete', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
       res.status(400).json({ message: 'Specified id is not valid' });

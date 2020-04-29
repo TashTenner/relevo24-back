@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const {
   checkIfLoggedIn,
-  checkIfAdmin,
+  /* checkIfAdmin */
 } = require('../middlewares');
 
 const router = express.Router();
@@ -37,7 +37,7 @@ router.get('/:shiftId', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post('/add', checkIfAdmin, async (req, res, next) => {
+router.post('/add', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   try {
     const {
       timeStart, timeEnd, userId, workingDayId,
@@ -57,7 +57,7 @@ router.post('/add', checkIfAdmin, async (req, res, next) => {
   }
 });
 
-router.put('/:shiftId/update', checkIfAdmin, async (req, res, next) => {
+router.put('/:shiftId/update', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.shiftId)) {
       res.status(400).json({ message: 'Specified id is not valid' });
@@ -76,7 +76,7 @@ router.put('/:shiftId/update', checkIfAdmin, async (req, res, next) => {
   }
 });
 
-router.delete('/:shiftId/delete', checkIfAdmin, async (req, res, next) => {
+router.delete('/:shiftId/delete', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.shiftId)) {
       res.status(400).json({ message: 'Specified id is not valid' });

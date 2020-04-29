@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const {
   checkIfLoggedIn,
-  checkIfAdmin,
+  /* checkIfAdmin, */
 } = require('../middlewares');
 
 const router = express.Router();
@@ -39,7 +39,7 @@ router.get('/:employeeId', checkIfLoggedIn, async (req, res, next) => {
 
 // admin can change: role (to admin eg; if deletion is wanted - via delete better), shifts
 
-router.put('/:employeeId/update-role', checkIfAdmin, async (req, res, next) => {
+router.put('/:employeeId/update-role', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.employeeId)) {
       res.status(400).json({ message: 'Specified id is not valid' });
@@ -79,7 +79,7 @@ router.put('/:employeeId/update', checkIfLoggedIn, async (req, res, next) => {
 
 // deletes not only "employee", but the user himself
 
-router.delete('/:employeeId/delete', checkIfAdmin, async (req, res, next) => {
+router.delete('/:employeeId/delete', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.employeeId)) {
       res.status(400).json({ message: 'Specified id is not valid' });

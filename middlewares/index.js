@@ -7,13 +7,13 @@ const checkIfLoggedIn = (req, res, next) => {
   }
 };
 
-const checkIfAdmin = (req, res, next) => {
-  if (req.session.currentUser && req.session.currentuser.role === 'admin') {
-    next();
-  } else {
-    res.status(401).json({ code: 'unauthorized' });
-  }
-};
+// const checkIfAdmin = (req, res, next) => {
+//   if (req.session.currentUser.role === 'admin') {
+//     next();
+//   } else {
+//     res.status(401).json({ code: 'unauthorized' });
+//   }
+// };
 
 const checkUsernameAndPasswordNotEmpty = (req, res, next) => {
   const { username, password } = req.body;
@@ -29,5 +29,5 @@ const checkUsernameAndPasswordNotEmpty = (req, res, next) => {
 module.exports = {
   checkIfLoggedIn,
   checkUsernameAndPasswordNotEmpty,
-  checkIfAdmin,
+  /* checkIfAdmin, */
 };
