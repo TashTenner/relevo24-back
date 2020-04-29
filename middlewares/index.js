@@ -8,7 +8,7 @@ const checkIfLoggedIn = (req, res, next) => {
 };
 
 const checkIfAdmin = (req, res, next) => {
-  if (req.session.currentUser && req.user.role === 'admin') {
+  if (req.session.currentUser && req.session.currentuser.role === 'admin') {
     next();
   } else {
     res.status(401).json({ code: 'unauthorized' });
