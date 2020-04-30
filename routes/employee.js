@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const {
   checkIfLoggedIn,
   /* checkIfAdmin, */
-} = require('../middlewares');
+} = require('../middlewares/index');
 
 const router = express.Router();
 const User = require('../models/User');

@@ -20,7 +20,7 @@ router.get('/me', (req, res, next) => {
 
 // eslint-disable-next-line consistent-return
 router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) => {
-  const { username, password } = res.locals.auth;
+  const { username, password } = req.body;
   try {
     const user = await User.findOne({ username });
     if (user) {

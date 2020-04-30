@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const {
   checkIfLoggedIn,
   /* checkIfAdmin */
-} = require('../middlewares');
+} = require('../middlewares/index');
 
 const router = express.Router();
 const User = require('../models/User'); // populate
@@ -45,8 +45,8 @@ router.post('/add', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) =
     const shift = await Shift.create({
       timeStart,
       timeEnd,
-      employee: userId,
       day: workingDayId,
+      employee: userId,
     });
     await User.findByIdAndUpdate(userId, { $push: { shifts: shift._id } }, { new: true }).populate('shifts');
     await WorkingDay.findByIdAndUpdate(workingDayId, { $push: { shifts: shift._id } }, { new: true }).populate('shifts');
