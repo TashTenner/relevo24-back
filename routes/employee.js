@@ -26,7 +26,10 @@ router.get('/', checkIfLoggedIn, async (req, res, next) => {
 router.get('/:employeeId', checkIfLoggedIn, async (req, res, next) => {
   const { employeeId } = req.params;
   try {
-    const employee = await User.findById(employeeId).populate('shifts');
+    const employee = await User.findById(employeeId).populate({
+      path: 'shifts',
+      populate: { path: 'day' },
+    });
     if (employee) {
       res.json(employee);
     } else {
