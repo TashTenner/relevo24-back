@@ -1,7 +1,7 @@
 // const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-// const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser'); // not for Netlify
 const logger = require('morgan');
 const mongoose = require('mongoose');
 // const bodyParser = require('body-parser');
@@ -9,13 +9,6 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const cors = require('cors')({ origin: true, credentials: true }); // deploy Netlify
 require('dotenv').config();
-
-const authRouter = require('./routes/auth');
-// const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/user');
-const employeesRouter = require('./routes/employee');
-const workingDaysRouter = require('./routes/workingDay');
-const shiftsRouter = require('./routes/shift');
 
 mongoose.set('useCreateIndex', true);
 mongoose
@@ -33,12 +26,19 @@ mongoose
     console.error(error);
   });
 
+const authRouter = require('./routes/auth');
+// const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/user');
+const employeesRouter = require('./routes/employee');
+const workingDaysRouter = require('./routes/workingDay');
+const shiftsRouter = require('./routes/shift');
+
 const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser()); not to be used for Netlify
+// app.use(cookieParser()); // not to be used for Netlify
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
@@ -54,7 +54,7 @@ app.use(
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'none', // important for Netlify
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production', // important for Netlify
     },
   }),
 );
@@ -64,12 +64,12 @@ app.use(cors); // Netlify
 app.options('*', cors); // Netlify
 
 // // to be used if not deployed with Netlify
-// // app.use(
-// //   cors({
-// //     credentials: true,
-// //     origin: [process.env.FRONTEND_URL],
-// //   }),
-// // );
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: [process.env.FRONTEND_URL],
+//   }),
+// );
 
 app.use((req, res, next) => {
   app.locals.currentUser = req.session.currentUser;

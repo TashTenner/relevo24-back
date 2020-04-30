@@ -1,7 +1,7 @@
 const express = require('express');
 // const createError = require('http-errors');
 
-const { /* checkIfAdmin, */ checkIfLoggedIn } = require('../middlewares');
+const { /* checkIfAdmin, */ checkIfLoggedIn } = require('../middlewares/index');
 
 const router = express.Router();
 const WorkingDay = require('../models/WorkingDay');
