@@ -65,11 +65,15 @@ router.put('/:shiftId/update', checkIfLoggedIn /* checkIfAdmin */, async (req, r
     }
     const { shiftId } = req.params;
     const {
-      timeStart, timeEnd,
+      timeStart, timeEnd, workingDayId,
     } = req.body;
     const shift = await Shift.findByIdAndUpdate(shiftId, {
-      timeStart, timeEnd,
+      timeStart,
+      timeEnd,
+      day: workingDayId,
     }, { new: true }).populate('day').populate('employee');
+    await WorkingDay.findByIdAndUpdate(workingDayId, { $push: { shifts: shift._id } }, { new: true }).populate('shifts');
+    await WorkingDay.findByIdAndUpdate(workingDayId, { $pull: { shifts: shift._id } });
     res.json(shift);
   } catch (error) {
     next(error);
