@@ -72,8 +72,12 @@ router.put('/:shiftId/update', checkIfLoggedIn /* checkIfAdmin */, async (req, r
       timeEnd,
       day: workingDayId,
     }, { new: true }).populate('day').populate('employee');
-    await WorkingDay.findByIdAndUpdate(workingDayId, { $push: { shifts: shift._id } }, { new: true }).populate('shifts');
-    await WorkingDay.findByIdAndUpdate(workingDayId, { $pull: { shifts: shift._id } });
+    // eslint-disable-next-line max-len
+    await WorkingDay.findOneAndUpdate({ shifts: shift._id }, { $pull: { shifts: shift._id } }, { new: true });
+    await WorkingDay.findByIdAndUpdate(shift.day._id, { $push: { shifts: shift._id } }, { new: true }).populate('shifts');
+    // eslint-disable-next-line max-len
+    await WorkingDay.findOneAndUpdate({ employeesTeam: shift.employee._id }, { $pull: { employeesTeam: shift.employee._id } }, { new: true });
+    await WorkingDay.findByIdAndUpdate(shift.day._id, { $push: { employeesTeam: shift.employee._id } }, { new: true }).populate('employeesTeam');
     res.json(shift);
   } catch (error) {
     next(error);
