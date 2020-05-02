@@ -26,7 +26,7 @@ router.get('/', checkIfLoggedIn, async (req, res, next) => {
 router.get('/:shiftId', checkIfLoggedIn, async (req, res, next) => {
   const { shiftId } = req.params;
   try {
-    const shift = await Shift.findById(shiftId).populate('day').populate('employee');
+    const shift = await Shift.findById(shiftId).populate('day').populate('employee').populate('employeesTeam');
     if (shift) {
       res.json(shift);
     } else {
