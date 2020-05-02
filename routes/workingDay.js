@@ -9,7 +9,10 @@ const WorkingDay = require('../models/WorkingDay');
 
 router.get('/', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   try {
-    const workingDays = await WorkingDay.find().populate('employeesTeam').populate('shifts');
+    const workingDays = await WorkingDay.find()
+      .populate({ path: 'shifts', populate: { path: 'employee' } })
+      .populate({ path: 'shifts', populate: { path: 'day' } })
+      .populate({ path: 'employeesTeam', populate: { path: 'shifts', populate: { path: 'employee' } } });
     res.json(workingDays);
   } catch (error) {
     next(error);
@@ -19,7 +22,10 @@ router.get('/', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
 router.get('/:workingDayId', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   const { workingDayId } = req.params;
   try {
-    const workingDay = await WorkingDay.findById(workingDayId).populate('employeesTeam').populate('shifts');
+    const workingDay = await WorkingDay.findById(workingDayId)
+      .populate({ path: 'shifts', populate: { path: 'employee' } })
+      .populate({ path: 'shifts', populate: { path: 'day' } })
+      .populate({ path: 'employeesTeam', populate: { path: 'shifts', populate: { path: 'employee' } } });
     if (workingDay) {
       res.json(workingDay);
     } else {
