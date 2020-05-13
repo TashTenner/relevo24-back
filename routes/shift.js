@@ -41,7 +41,7 @@ router.get('/:shiftId', checkIfLoggedIn, async (req, res, next) => {
 
 router.post('/add', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
   const {
-    timeStartTemp, timeEnd, userId, workingDayId,
+    timeStart, timeEnd, userId, workingDayId,
   } = req.body;
   try {
     function toSeconds(timeStr) {
@@ -49,10 +49,7 @@ router.post('/add', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) =
       return parts[0] * 3600 + parts[1] * 60;
     };
 
-    const timeStartTempHour = timeStartTemp.slice(0, 2);
-    const timeStartTempTempMin = timeStartTemp.slice(3);
-    const timeStart = timeStartTempHour.concat('', timeStartTempTempMin);
-    const duration = ((Math.abs(toSeconds(timeStartTemp) - toSeconds(timeEnd))) / 60);
+    const duration = ((Math.abs(toSeconds(timeStart) - toSeconds(timeEnd))) / 60);
 
     const shift = await Shift.create({
       timeStart,
@@ -77,7 +74,7 @@ router.put('/:shiftId/update', checkIfLoggedIn /* checkIfAdmin */, async (req, r
   }
   const { shiftId } = req.params;
   const {
-    timeStartTemp, timeEnd, workingDayId,
+    timeStart, timeEnd, workingDayId,
   } = req.body;
   try {
     function toSeconds(timeStr) {
@@ -85,17 +82,15 @@ router.put('/:shiftId/update', checkIfLoggedIn /* checkIfAdmin */, async (req, r
       return parts[0] * 3600 + parts[1] * 60;
     };
 
-    const timeStartTempHour = timeStartTemp.slice(0, 2);
-    const timeStartTempTempMin = timeStartTemp.slice(3);
-    const timeStart = timeStartTempHour.concat('', timeStartTempTempMin);
-    const duration = ((Math.abs(toSeconds(timeStartTemp) - toSeconds(timeEnd))) / 60);
+    const duration = ((Math.abs(toSeconds(timeStart) - toSeconds(timeEnd))) / 60);
 
     const shift = await Shift.findByIdAndUpdate(shiftId, {
       timeStart,
       timeEnd,
       duration,
       day: workingDayId,
-    }, { new: true }).populate('day').populate('employee');
+    }, { new: true }).populate('day').populate('employee').populate('employeesTeam');
+    // console.log(shift);
     // eslint-disable-next-line max-len
     await WorkingDay.findOneAndUpdate({ shifts: shift._id }, { $pull: { shifts: shift._id } }, { new: true });
     await WorkingDay.findByIdAndUpdate(shift.day._id, { $push: { shifts: shift._id } }, { new: true }).populate('shifts');
