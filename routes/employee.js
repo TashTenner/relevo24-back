@@ -90,7 +90,9 @@ router.delete('/:employeeId/delete', checkIfLoggedIn /* checkIfAdmin */, async (
     }
     const { employeeId } = req.params;
     const employee = await User.findByIdAndDelete(employeeId).populate('shifts');
+    // maybe not necessary to populate shifts here
     await Shift.findByIdAndUpdate(employee.shift._id, { $pull: { employee: employee._id } });
+    // the shift itself needs to be deleted, { employee: employee._id } is an object, not an array
     await WorkingDay.findByIdAndUpdate(employee.workingDay._id,
       {
         $pull: { employeesTeam: employee._id },
