@@ -71,18 +71,29 @@ router.post('/add', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) =
 });
 
 router.put('/:shiftId/update', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.shiftId)) {
+    res.status(400).json({ message: 'Specified id is not valid' });
+    return;
+  }
+  const { shiftId } = req.params;
+  const {
+    timeStartTemp, timeEnd, workingDayId,
+  } = req.body;
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.shiftId)) {
-      res.status(400).json({ message: 'Specified id is not valid' });
-      return;
-    }
-    const { shiftId } = req.params;
-    const {
-      timeStart, timeEnd, workingDayId,
-    } = req.body;
+    function toSeconds(timeStr) {
+      const parts = timeStr.split(':');
+      return parts[0] * 3600 + parts[1] * 60;
+    };
+
+    const timeStartTempHour = timeStartTemp.slice(0, 2);
+    const timeStartTempTempMin = timeStartTemp.slice(3);
+    const timeStart = timeStartTempHour.concat('', timeStartTempTempMin);
+    const duration = ((Math.abs(toSeconds(timeStartTemp) - toSeconds(timeEnd))) / 60);
+
     const shift = await Shift.findByIdAndUpdate(shiftId, {
       timeStart,
       timeEnd,
+      duration,
       day: workingDayId,
     }, { new: true }).populate('day').populate('employee');
     // eslint-disable-next-line max-len
