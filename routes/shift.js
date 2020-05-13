@@ -27,6 +27,8 @@ router.get('/:shiftId', checkIfLoggedIn, async (req, res, next) => {
   const { shiftId } = req.params;
   try {
     const shift = await Shift.findById(shiftId).populate('day').populate('employee').populate('employeesTeam');
+    // not sure if populate('employeesTeam') really works as it belongs WorkingDay and
+    // should be populated with path:
     if (shift) {
       res.json(shift);
     } else {
@@ -38,13 +40,24 @@ router.get('/:shiftId', checkIfLoggedIn, async (req, res, next) => {
 });
 
 router.post('/add', checkIfLoggedIn /* checkIfAdmin */, async (req, res, next) => {
+  const {
+    timeStartTemp, timeEnd, userId, workingDayId,
+  } = req.body;
   try {
-    const {
-      timeStart, timeEnd, userId, workingDayId,
-    } = req.body;
+    function toSeconds(timeStr) {
+      const parts = timeStr.split(':');
+      return parts[0] * 3600 + parts[1] * 60;
+    };
+
+    const timeStartTempHour = timeStartTemp.slice(0, 2);
+    const timeStartTempTempMin = timeStartTemp.slice(3);
+    const timeStart = timeStartTempHour.concat('', timeStartTempTempMin);
+    const duration = ((Math.abs(toSeconds(timeStartTemp) - toSeconds(timeEnd))) / 60);
+
     const shift = await Shift.create({
       timeStart,
       timeEnd,
+      duration,
       day: workingDayId,
       employee: userId,
     });
